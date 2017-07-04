@@ -1,6 +1,7 @@
 # Semiconductors
 
-Tools for modelling of electronic properties of semiconductors
+Tools for modelling of electronic properties of semiconductors: 
+calculations of band structure
 
 __________________________________
 Nextnano.py

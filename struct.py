@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Module contains classes and functions to determine the semiconductor 
-heterostructures design and materials. Includes database of all materials.
+Сlasses and functions to determine the semiconductor heterostructure design and materials.
+Includes database of all materials.
 
-Material database. Contains all the pure and compound semiconductor 
+Material database. Contains all the pure and compound semiconductor
 parameters as dictionaries. 
 PURESEM - all pure semiconductors (group IV, III-V and others)
 BINALLOY - all alloy semiconductors from two components (IV/IV, III-V/III-V)
@@ -74,6 +74,7 @@ import matplotlib.pyplot as plt
 
 import equat
 
+# Material database, you can define new materials here
 PURESEM = {
            'GaAs' : {'lat': 5.65325, 'lat_temp': 3.88e-5,
                      'VBen': 1.46, 'VBSO': 0.341,
@@ -105,6 +106,7 @@ BINALLOY = {
                     'BGLbow' : 0.0, 'BGXbow' : 0.0,
                     }
           }
+
 
 class mater_pure():
     """
@@ -194,7 +196,8 @@ class mater_pure():
         To add: orientation dependent mass tensor"""
         
         return self.param.get('CBGmass', PURESEM[self.name].get('CBGmass'))[0]
-    
+
+
 class mater_alloy_double():
     """
     Contains all the material parameters for alloy semiconductors consisting of
@@ -234,10 +237,12 @@ class mater_alloy_double():
         mean_CBG = (x * self.mat1.CBG() + (1 - x) * self.mat2.CBG() -
                    x * (1 - x) * self.param.get('VBbow', BINALLOY[self.name].get('VBbow', 0.0))
                    )
-    
-AlGaAs = mater_alloy_double('AlGaAs', {'EnShift': 0.0})
-print(AlGaAs.VBH(0.3))
-xes = [i*0.1 for i in range(11)]
-vb = [AlGaAs.VBH(x) for x in xes]
-plt.plot(xes, vb)
+
+
+if __name__ == '__main__':
+    AlGaAs = mater_alloy_double('AlGaAs', {'EnShift': 0.0})
+    print(AlGaAs.VBH(0.3))
+    xes = [i*0.1 for i in range(11)]
+    vb = [AlGaAs.VBH(x) for x in xes]
+    plt.plot(xes, vb)
 

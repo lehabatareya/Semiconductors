@@ -76,28 +76,28 @@ import equat
 
 # Material database, you can define new materials here
 PURESEM = {
-           'GaAs' : {'lat': 5.65325, 'lat_temp': 3.88e-5,
-                     'VBen': 1.46, 'VBSO': 0.341,
-                     'BGGen': 1.519, 'BGGa': 0.5405e-3, 'BGGb': 204.0,
-                     'BGLen': 1.815, 'BGLa': 0.605e-3, 'BGLb': 204.0,
-                     'BGXen': 1.981, 'BGXa': 0.46e-3, 'BGXb': 204.0,
-                     'CBGdeg': 2, 'CBLdeg' : 8, 'CBXdeg': 6,
-                     'CBGmass': (0.067, 0.067, 0.067), 
-                     'CBLmass': (1.9, 0.0754, 0.0754),
-                     'CBXmass': (1.3, 0.23, 0.23),
-                     'Lutting': (6.98, 2.06, 2.93)
-                     }, 
-           'AlAs' : {'lat': 5.6611, 'lat_temp': 2.9e-5,
-                     'VBen': 0.95, 'VBSO': 0.28,
-                     'BGGen': 3.099, 'BGGa': 0.885e-3, 'BGGb': 530.0,
-                     'BGLen': 2.46, 'BGLa': 0.605e-3, 'BGLb': 204.0,
-                     'BGXen': 2.24, 'BGXa': 0.7e-3, 'BGXb': 530.0,
-                     'CBGdeg': 2, 'CBLdeg' : 8, 'CBXdeg': 6,
-                     'CBGmass': (0.15, 0.15, 0.15), 
-                     'CBLmass': (1.32, 0.15, 0.15),
-                     'CBXmass': (0.97, 0.22, 0.22),
-                     'Lutting': (3.76, 0.82, 1.42)
-                     }
+           'GaAs': {'lat': 5.65325, 'lat_temp': 3.88e-5,
+                    'VBen': 1.46, 'VBSO': 0.341,
+                    'BGGen': 1.519, 'BGGa': 0.5405e-3, 'BGGb': 204.0,
+                    'BGLen': 1.815, 'BGLa': 0.605e-3, 'BGLb': 204.0,
+                    'BGXen': 1.981, 'BGXa': 0.46e-3, 'BGXb': 204.0,
+                    'CBGdeg': 2, 'CBLdeg' : 8, 'CBXdeg': 6,
+                    'CBGmass': (0.067, 0.067, 0.067),
+                    'CBLmass': (1.9, 0.0754, 0.0754),
+                    'CBXmass': (1.3, 0.23, 0.23),
+                    'Lutting': (6.98, 2.06, 2.93)
+                    },
+           'AlAs': {'lat': 5.6611, 'lat_temp': 2.9e-5,
+                    'VBen': 0.95, 'VBSO': 0.28,
+                    'BGGen': 3.099, 'BGGa': 0.885e-3, 'BGGb': 530.0,
+                    'BGLen': 2.46, 'BGLa': 0.605e-3, 'BGLb': 204.0,
+                    'BGXen': 2.24, 'BGXa': 0.7e-3, 'BGXb': 530.0,
+                    'CBGdeg': 2, 'CBLdeg' : 8, 'CBXdeg': 6,
+                    'CBGmass': (0.15, 0.15, 0.15),
+                    'CBLmass': (1.32, 0.15, 0.15),
+                    'CBXmass': (0.97, 0.22, 0.22),
+                    'Lutting': (3.76, 0.82, 1.42)
+                    }
            }
 
 BINALLOY = {
@@ -108,7 +108,7 @@ BINALLOY = {
           }
 
 
-class mater_pure():
+class Mater_Pure():
     """
     Contains all the material parameters for pure semiconductors (not compound)
     """
@@ -198,7 +198,7 @@ class mater_pure():
         return self.param.get('CBGmass', PURESEM[self.name].get('CBGmass'))[0]
 
 
-class mater_alloy_double():
+class Mater_Alloy_Double():
     """
     Contains all the material parameters for alloy semiconductors consisting of
     two pure semiconductors
@@ -215,8 +215,8 @@ class mater_alloy_double():
         parameters for component semiconductors 1 and 2
         """
         self.name = matname
-        self.mat1 = mater_pure(BINALLOY[self.name]['sem'][0], ovrwrt1)
-        self.mat2 = mater_pure(BINALLOY[self.name]['sem'][1], ovrwrt2)
+        self.mat1 = Mater_Pure(BINALLOY[self.name]['sem'][0], ovrwrt1)
+        self.mat2 = Mater_Pure(BINALLOY[self.name]['sem'][1], ovrwrt2)
         self.param = overwrite
         
     def VBH(self, x):
@@ -240,9 +240,9 @@ class mater_alloy_double():
 
 
 if __name__ == '__main__':
-    AlGaAs = mater_alloy_double('AlGaAs', {'EnShift': 0.0})
+    AlGaAs = Mater_Alloy_Double('AlGaAs', {'EnShift': 0.0})
     print(AlGaAs.VBH(0.3))
     xes = [i*0.1 for i in range(11)]
     vb = [AlGaAs.VBH(x) for x in xes]
     plt.plot(xes, vb)
-
+    plt.show()

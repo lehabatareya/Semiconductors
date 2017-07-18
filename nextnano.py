@@ -37,7 +37,7 @@ def load_el_wave_func2(folder, subband_ind):
     :param subband_ind: Int number of electron subband index, starting from 1
     :return: ndarray, first column - coordinates, second column - squared wave function in [1/nm] units
     """
-    file_name = folder + '\sg_1band1\cb001_qc001_sg001_deg001_neu.dat'
+    file_name = folder + '\sg_1band1\cb1_qc1_sg1_deg1_neu_psi_squared.dat'
     all_data = read_data(file_name)
     return all_data[:, (0, subband_ind)]
 

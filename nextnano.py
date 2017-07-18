@@ -4,7 +4,6 @@ Interaction between Python and Nextnano3 simulation program
 """
 
 import numpy as np
-import matplotlib as plt
 
 
 def read_data(file_name):

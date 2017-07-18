@@ -72,31 +72,31 @@ References:
 
 import matplotlib.pyplot as plt
 
-import equat
+import equat, phys_const
 
 # Material database, you can define new materials here
 PURESEM = {
-    'GaAs': {'lat': 5.65325, 'lat_temp': 3.88e-5,
-             'VBen': 1.46, 'VBSO': 0.341,
-             'BGGen': 1.519, 'BGGa': 0.5405e-3, 'BGGb': 204.0,
-             'BGLen': 1.815, 'BGLa': 0.605e-3, 'BGLb': 204.0,
-             'BGXen': 1.981, 'BGXa': 0.46e-3, 'BGXb': 204.0,
-             'CBGdeg': 2, 'CBLdeg': 8, 'CBXdeg': 6,
-             'CBGmass': (0.067, 0.067, 0.067),
-             'CBLmass': (1.9, 0.0754, 0.0754),
-             'CBXmass': (1.3, 0.23, 0.23),
-             'Lutting': (6.98, 2.06, 2.93)
+    'GaAs': {'lat': 5.65325, 'lat_temp': 3.88e-5,   # lattice constant, temperature coefficient
+             'VBen': 1.46, 'VBSO': 0.341,   # energy of the top of the valence band [eV]
+             'BGGen': 1.519, 'BGGa': 0.5405e-3, 'BGGb': 204.0,  # bandgap Gamma (energy and Varshni params)
+             'BGLen': 1.815, 'BGLa': 0.605e-3, 'BGLb': 204.0,   # bandgap L (energy and Varshni params)
+             'BGXen': 1.981, 'BGXa': 0.46e-3, 'BGXb': 204.0,    # bandgap X (energy and Varshni params)
+             'CBGdeg': 2, 'CBLdeg': 8, 'CBXdeg': 6,     # degeneracy of CB minimum
+             'CBGmass': (0.067, 0.067, 0.067),          # CB Gamma effective mass
+             'CBLmass': (1.9, 0.0754, 0.0754),          # CB L effective mass
+             'CBXmass': (1.3, 0.23, 0.23),              # CB X effective mass
+             'Lutting': (6.98, 2.06, 2.93)              # Luttinger parameters
              },
-    'AlAs': {'lat': 5.6611, 'lat_temp': 2.9e-5,
-             'VBen': 0.95, 'VBSO': 0.28,
-             'BGGen': 3.099, 'BGGa': 0.885e-3, 'BGGb': 530.0,
-             'BGLen': 2.46, 'BGLa': 0.605e-3, 'BGLb': 204.0,
-             'BGXen': 2.24, 'BGXa': 0.7e-3, 'BGXb': 530.0,
-             'CBGdeg': 2, 'CBLdeg': 8, 'CBXdeg': 6,
-             'CBGmass': (0.15, 0.15, 0.15),
-             'CBLmass': (1.32, 0.15, 0.15),
-             'CBXmass': (0.97, 0.22, 0.22),
-             'Lutting': (3.76, 0.82, 1.42)
+    'AlAs': {'lat': 5.6611, 'lat_temp': 2.9e-5,   # lattice constant, temperature coefficient
+             'VBen': 0.95, 'VBSO': 0.28,   # energy of the top of the valence band [eV]
+             'BGGen': 3.099, 'BGGa': 0.885e-3, 'BGGb': 530.0,  # bandgap Gamma (energy and Varshni params)
+             'BGLen': 2.46, 'BGLa': 0.605e-3, 'BGLb': 204.0,   # bandgap L (energy and Varshni params)
+             'BGXen': 2.24, 'BGXa': 0.7e-3, 'BGXb': 530.0,    # bandgap X (energy and Varshni params)
+             'CBGdeg': 2, 'CBLdeg': 8, 'CBXdeg': 6,     # degeneracy of CB minimum
+             'CBGmass': (0.15, 0.15, 0.15),             # CB Gamma effective mass
+             'CBLmass': (1.32, 0.15, 0.15),             # CB L effective mass
+             'CBXmass': (0.97, 0.22, 0.22),             # CB X effective mass
+             'Lutting': (3.76, 0.82, 1.42)              # Luttinger parameters
              }
 }
 
@@ -107,10 +107,10 @@ BINALLOY = {
                }
 }
 
-
+# Material classes
 class Mater_Pure():
     """
-    Contains all the material parameters for pure semiconductors (not compound)
+    Contains all the material parameters for pure semiconductors
     """
 
     def __init__(self, matname, overwrite={}):
@@ -195,8 +195,13 @@ class Mater_Pure():
         currently the (100) mass is returned
         To add: orientation dependent mass tensor"""
 
-        return self.param.get('CBGmass', PURESEM[self.name].get('CBGmass'))[0]
+        return self.param.get('CBGmass', PURESEM[self.name].get('CBGmass'))
 
+    def cbg_eff_dens(self, temp=300.0):
+        """Returns effective density of states of Gamma conduction band"""
+        m = self.mg()
+        m_eff = (m[0] * m[1] * m [2]) ** (1 / 3)    # effective density of states
+        return m_eff
 
 class Mater_Alloy_Double():
     """
@@ -240,9 +245,10 @@ class Mater_Alloy_Double():
 
 
 if __name__ == '__main__':
+    GaAs = Mater_Pure('GaAs')
     AlGaAs = Mater_Alloy_Double('AlGaAs', {'EnShift': 0.0})
-    print(AlGaAs.VBH(0.3))
     xes = [i * 0.1 for i in range(11)]
     vb = [AlGaAs.VBH(x) for x in xes]
-    plt.plot(xes, vb)
-    plt.show()
+    #plt.plot(xes, vb)
+    #plt.show()
+    print(GaAs.cbg_eff_dens())

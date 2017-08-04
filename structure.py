@@ -200,7 +200,7 @@ class Mater_Pure():
     def cbg_eff_dens(self, temp=300.0):
         """Returns effective density of states of Gamma conduction band"""
         m = self.mg()
-        m_eff = (m[0] * m[1] * m [2]) ** (1 / 3)    # effective density of states
+        m_eff = (m[0] * m[1] * m [2]) ** (1 / 3)    # effective density of states mass
         return m_eff
 
 class Mater_Alloy_Double():
